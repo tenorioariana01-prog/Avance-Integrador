@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Editar Perfil - ViveSalud</title>
+  <link rel="stylesheet" href="style.css" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+</head>
+<body>
+  <!-- ===== NAVBAR ===== -->
+  <header class="navbar fixed-navbar">
+    <div class="logo">
+      <img src="imagenes/logovs.png" alt="ViveSalud" />
+    </div>
+    <nav class="nav-links">
+      <a href="index.html">Inicio</a>
+      <a href="#">Nosotros</a>
+      <a href="#">Servicios</a>
+      <a href="#">Contacto</a>
+    </nav>
+  </header>
+
+  <!-- ===== CONTENIDO PERFIL ===== -->
+  <section class="perfil-container">
+    <h2>Editar Perfil</h2>
+    <form class="perfil-form" id="perfilForm">
+      <label for="nombre">Nombre completo</label>
+      <input type="text" id="nombre" name="nombre" placeholder="Tu nombre completo" required>
+
+      <label for="correo">Correo electrónico</label>
+      <input type="email" id="correo" name="correo" placeholder="tucorreo@ejemplo.com" disabled>
+
+      <label for="telefono">Teléfono</label>
+      <input type="tel" id="telefono" name="telefono" placeholder="987654321">
+
+      <button type="submit" class="btn-guardar">Guardar Cambios</button>
+    </form>
+  </section>
+
+  <script src="perfil.js"></script>
+</body>
+</html>

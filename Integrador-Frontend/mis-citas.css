@@ -1,0 +1,171 @@
+/* ===== MIS CITAS - DISEÑO FINAL ===== */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
+
+body {
+  font-family: 'Poppins', sans-serif;
+  background: #f4f7f6;
+  margin: 0;
+  padding: 0; /* 🔧 quitamos el espacio extra que bajaba el header */
+}
+
+/* ===== HEADER ===== */
+header {
+  background: #ffffff;
+  border-bottom: 1px solid #e5e7eb;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  padding: 0.75rem 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+header img {
+  border-radius: 6px;
+}
+
+header h5 {
+  font-weight: 600;
+  color: #198754;
+  margin: 0;
+}
+
+/* ===== CONTENEDOR PRINCIPAL ===== */
+.mis-citas-page {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  min-height: calc(100vh - 70px);
+  padding: 2.5rem 1rem;
+}
+
+.contenedor-citas {
+  background: #ffffff;
+  width: 100%;
+  max-width: 1050px;
+  padding: 2.5rem;
+  border-radius: 20px;
+  box-shadow: 0 6px 25px rgba(0, 0, 0, 0.05);
+  border: 1px solid #e9f0ed;
+}
+
+/* ===== TÍTULO ===== */
+.titulo-citas {
+  text-align: center;
+  font-weight: 700;
+  color: #157347;
+  font-size: 2rem;
+  margin-bottom: 2.2rem;
+  letter-spacing: -0.5px;
+}
+
+.titulo-citas::after {
+  content: "";
+  display: block;
+  width: 90px;
+  height: 3px;
+  background: #20c997;
+  border-radius: 4px;
+  margin: 0.6rem auto 0;
+}
+
+/* ===== GRID DE TARJETAS ===== */
+.grid-citas {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 1.8rem;
+}
+
+/* ===== TARJETA DE CITA ===== */
+.card-cita {
+  background: linear-gradient(145deg, #ffffff, #f8fcfa);
+  border: 1px solid #e1ece7;
+  border-radius: 18px;
+  padding: 1.8rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+  transition: all 0.25s ease;
+  position: relative;
+}
+
+.card-cita:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.08);
+}
+
+/* ===== TÍTULO DE CITA ===== */
+.card-cita h5 {
+  font-size: 1.25rem;
+  color: #14532d;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 0.7rem;
+}
+
+.card-cita h5::before {
+  content: "🩺";
+  font-size: 1.4rem;
+}
+
+/* ===== DETALLES ===== */
+.card-cita p {
+  color: #495057;
+  font-size: 0.95rem;
+  margin: 0.25rem 0;
+  line-height: 1.5;
+}
+
+.card-cita p strong {
+  color: #157347;
+}
+
+/* ===== BOTONES ===== */
+.card-cita .acciones {
+  margin-top: 1.2rem;
+  display: flex;
+  gap: 0.7rem;
+  flex-wrap: wrap;
+}
+
+.card-cita .btn {
+  border-radius: 10px;
+  font-weight: 500;
+  padding: 0.45rem 1.3rem;
+  transition: all 0.25s ease;
+  font-size: 0.9rem;
+}
+
+.card-cita .btn-outline-success {
+  border: 1.5px solid #198754;
+  color: #198754;
+  background-color: transparent;
+}
+
+.card-cita .btn-outline-success:hover {
+  background-color: #198754;
+  color: #fff;
+}
+
+.card-cita .btn-outline-danger {
+  border: 1.5px solid #dc3545;
+  color: #dc3545;
+  background-color: transparent;
+}
+
+.card-cita .btn-outline-danger:hover {
+  background-color: #dc3545;
+  color: #fff;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+  .contenedor-citas {
+    padding: 1.8rem 1.2rem;
+  }
+
+  .titulo-citas {
+    font-size: 1.6rem;
+  }
+}
