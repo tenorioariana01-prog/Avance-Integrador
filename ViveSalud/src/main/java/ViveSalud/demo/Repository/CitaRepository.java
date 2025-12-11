@@ -11,32 +11,90 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 
-public interface CitaRepository extends JpaRepository<Cita,Long> {
-    //   // 🔹 Buscar citas por médico y fecha
-      List<Cita> findByMedicoAndFecha(Usuario medico, LocalDate fecha);
-    //
-    //    // 🔹 Verificar si ya existe una cita en un horario específico (no cancelada)
-     @Query("SELECT CASE WHEN COUNT(c) > 0 THEN true ELSE false END FROM Cita c " +
-                "WHERE c.medico = :medico AND c.fecha = :fecha AND c.hora = :hora " +
-                "AND c.estado.nombreEstado != 'CANCELADA'")
-        boolean existsCitaEnHorario(@Param("medico") Usuario medico,
-                                    @Param("fecha") LocalDate fecha,
-                                    @Param("hora") LocalTime hora);
-    //
-    //    // 🔹 Obtener todas las citas de un paciente por su ID, ordenadas por fecha descendente
-        @Query("SELECT c FROM Cita c WHERE c.paciente.idUsuario = :idPaciente ORDER BY c.fecha DESC, c.hora DESC")
-        List<Cita> findCitasByPaciente(@Param("idPaciente") Long idPaciente);
+public interface CitaRepository extends JpaRepository<Cita, Long> {
 
-    //    // 🔹 Obtener citas por estado
-        List<Cita> findByEstado(EstadoCita estado);
-    //
-        // 🔹 Obtener citas futuras de un médico (ordenadas por fecha y hora)
-        @Query("SELECT c FROM Cita c WHERE c.medico = :medico AND " +
-                "(c.fecha > :fechaActual OR (c.fecha = :fechaActual AND c.hora >= :horaActual)) " +
-                "ORDER BY c.fecha, c.hora")
-        List<Cita> findCitasFuturasByMedico(@Param("medico") Usuario medico,
-                                            @Param("fechaActual") LocalDate fechaActual,
-                                            @Param("horaActual") LocalTime horaActual);
+    // =======================================================
+    // 1️⃣ Buscar citas por médico y fecha
+    // =======================================================
+    List<Cita> findByMedicoAndFecha(Usuario medico, LocalDate fecha);
+
+    List<Cita> findByPacienteOrderByFechaDescHoraDesc(Usuario paciente);
+
+    List<Cita> findByMedicoAndFechaGreaterThanEqualOrderByFechaAscHoraAsc(
+            Usuario medico, LocalDate fecha
+    );
+
+    List<Cita> findByMedicoOrderByFechaDescHoraDesc(Usuario medico);
+
+
+    // =======================================================
+    // 2️⃣ Verificar si existe una cita activa en un horario específico
+    //    (no CANCELADA) — usado para crear y modificar citas
+    // =======================================================
+    @Query("""
+        SELECT CASE WHEN COUNT(c) > 0 THEN true ELSE false END
+        FROM Cita c
+        WHERE c.medico = :medico
+          AND c.fecha = :fecha
+          AND c.hora = :hora
+          AND UPPER(TRIM(c.estado.nombreEstado)) <> 'CANCELADA'
+    """)
+    boolean existsCitaActivaEnHorario(
+            @Param("medico") Usuario medico,
+            @Param("fecha") LocalDate fecha,
+            @Param("hora") LocalTime hora
+    );
+
+    // =======================================================
+    // 3️⃣ Obtener citas por paciente (ordenadas más recientes primero)
+    // =======================================================
+    @Query("""
+        SELECT c 
+        FROM Cita c 
+        WHERE c.paciente.idUsuario = :idPaciente
+        ORDER BY c.fecha DESC, c.hora DESC
+    """)
+    List<Cita> findCitasByPaciente(@Param("idPaciente") Long idPaciente);
+
+    // =======================================================
+    // 4️⃣ Obtener citas por estado (objeto EstadoCita)
+    // =======================================================
+    List<Cita> findByEstado(EstadoCita estado);
+
+    // =======================================================
+    // 5️⃣ Citas futuras de un médico (solo activas, no canceladas)
+    // =======================================================
+    @Query("""
+        SELECT c
+        FROM Cita c
+        WHERE c.medico = :medico
+          AND UPPER(TRIM(c.estado.nombreEstado)) <> 'CANCELADA'
+          AND (
+                c.fecha > :fechaActual
+             OR (c.fecha = :fechaActual AND c.hora >= :horaActual)
+          )
+        ORDER BY c.fecha, c.hora
+    """)
+    List<Cita> findCitasFuturasByMedico(
+            @Param("medico") Usuario medico,
+            @Param("fechaActual") LocalDate fechaActual,
+            @Param("horaActual") LocalTime horaActual
+    );
+
+    // =======================================================
+    // 6️⃣ Obtener citas del médico en una fecha EXCLUYENDO canceladas
+    //    (para reprogramación y disponibilidad)
+    // =======================================================
+    @Query("""
+        SELECT c
+        FROM Cita c
+        WHERE c.medico = :medico
+          AND c.fecha = :fecha
+          AND UPPER(TRIM(c.estado.nombreEstado)) <> 'CANCELADA'
+        ORDER BY c.hora
+    """)
+    List<Cita> findCitasActivasByMedicoAndFecha(
+            @Param("medico") Usuario medico,
+            @Param("fecha") LocalDate fecha
+    );
 }
-
-

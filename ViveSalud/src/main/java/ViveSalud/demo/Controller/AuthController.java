@@ -26,8 +26,8 @@ public class AuthController {
     public Map<String, Object> login(@RequestBody Usuario loginRequest) {
         Map<String, Object> response = new HashMap<>();
 
-        Optional<Usuario> usuarioOpt = usuarioRepository.findByNombresAndContrasena(
-                loginRequest.getNombres().trim(),
+        Optional<Usuario> usuarioOpt = usuarioRepository.findByCorreoAndContrasena(
+                loginRequest.getCorreo().trim(),
                 loginRequest.getContrasena().trim()
         );
 

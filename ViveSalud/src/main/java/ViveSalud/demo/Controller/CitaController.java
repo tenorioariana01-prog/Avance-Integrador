@@ -1,6 +1,5 @@
 package ViveSalud.demo.Controller;
 
-
 import ViveSalud.demo.Model.Cita;
 import ViveSalud.demo.Services.CitaService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,174 +10,203 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.time.format.TextStyle;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 
+@CrossOrigin (origins = "*")
 @RestController
-@RequestMapping ("/api/citas")
+@RequestMapping("/api/citas")
 public class CitaController {
 
     @Autowired
     private CitaService citaService;
 
-    /**
-     * 📋 Listar todos los médicos disponibles con sus especialidades
-     * GET /api/citas/medicos
-     */
+    // =========================================================
+    // 1️⃣ LISTAR MÉDICOS
+    // =========================================================
     @GetMapping("/medicos")
-    public ResponseEntity<List<Map<String, Object>>> listarMedicos() {
+    public ResponseEntity<?> listarMedicos() {
         try {
-            List<Map<String, Object>> medicos = citaService.listarMedicosDisponibles();
-            return ResponseEntity.ok(medicos);
+            return ResponseEntity.ok(citaService.listarMedicosDisponibles());
         } catch (Exception e) {
-            System.err.println("❌ Error en controller listarMedicos: " + e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("success", false, "message", "Error al listar médicos"));
         }
     }
 
-    /**
-     * 🕐 Obtener horarios disponibles de un médico en una fecha específica
-     * GET /api/citas/horarios-disponibles?idMedico=1&fecha=2025-11-01
-     */
+    // =========================================================
+    // 2️⃣ HORARIOS DISPONIBLES
+    // =========================================================
     @GetMapping("/horarios-disponibles")
-    public ResponseEntity<Map<String, Object>> obtenerHorariosDisponibles(
+    public ResponseEntity<?> obtenerHorariosDisponibles(
             @RequestParam Long idMedico,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fecha) {
 
         try {
-            // Obtener el día de la semana en minúscula y sin espacios
-            String diaSemana = fecha.getDayOfWeek()
-                    .getDisplayName(TextStyle.FULL, new Locale("es", "PE"))
-                    .toLowerCase()
-                    .trim();
-
-            System.out.println("🗓️ Consultando horarios del médico " + idMedico + " para el día " + diaSemana);
-
             Map<String, Object> response = citaService.obtenerHorariosDisponibles(idMedico, fecha);
             return ResponseEntity.ok(response);
 
         } catch (Exception e) {
-            Map<String, Object> errorResponse = new HashMap<>();
-            errorResponse.put("success", false);
-            errorResponse.put("message", "Error al obtener horarios: " + e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(Map.of("success", false, "message", "Error al obtener horarios: " + e.getMessage()));
+        }
+    }
+
+    @GetMapping("/especialidades")
+    public ResponseEntity<?> listarEspecialidades() {
+        try {
+            return ResponseEntity.ok(citaService.listarEspecialidades());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("success", false, "message", "Error al listar especialidades"));
+        }
+    }
+
+    @GetMapping("/medicos-por-especialidad")
+    public ResponseEntity<?> listarMedicosPorEspecialidad(@RequestParam String especialidad) {
+        try {
+            return ResponseEntity.ok(citaService.listarMedicosPorEspecialidad(especialidad));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("success", false, "message", "Error al listar médicos"));
         }
     }
 
 
 
-    /**
-     * ➕ Programar una nueva cita médica
-     * POST /api/citas/programar
-     */
+    // =========================================================
+    // 3️⃣ PROGRAMAR CITA
+    // =========================================================
     @PostMapping("/programar")
-    public ResponseEntity<Map<String, Object>> programarCita(@RequestBody Map<String, Object> citaData) {
+    public ResponseEntity<?> programarCita(@RequestBody Map<String, Object> citaData) {
+
         try {
-            Long idPaciente = Long.valueOf(citaData.get("idPaciente").toString());
-            Long idMedico = Long.valueOf(citaData.get("idMedico").toString());
+            Long idPaciente = Long.parseLong(citaData.get("idPaciente").toString());
+            Long idMedico = Long.parseLong(citaData.get("idMedico").toString());
             LocalDate fecha = LocalDate.parse(citaData.get("fecha").toString());
-            LocalTime hora = LocalTime.parse(citaData.get("hora").toString());
+            LocalTime hora = LocalTime.parse(citaData.get("hora").toString(), DateTimeFormatter.ofPattern("HH:mm"));
 
-            Map<String, Object> response = citaService.programarCita(idPaciente, idMedico, fecha, hora);
+            String telefonoFormulario = citaData.get("telefono") != null ? citaData.get("telefono").toString() : null;
 
-            if ((Boolean) response.get("success")) {
-                return ResponseEntity.status(HttpStatus.CREATED).body(response);
-            } else {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
-            }
+            Map<String, Object> response = citaService.programarCita(idPaciente, idMedico, fecha, hora,telefonoFormulario);
+
+            boolean success = (boolean) response.get("success");
+
+            return success
+                    ? ResponseEntity.status(HttpStatus.CREATED).body(response)
+                    : ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
 
         } catch (Exception e) {
-            Map<String, Object> errorResponse = new HashMap<>();
-            errorResponse.put("success", false);
-            errorResponse.put("message", "Error en los datos enviados: " + e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
+            return ResponseEntity.badRequest().body(
+                    Map.of("success", false, "message", "Error en los datos enviados: " + e.getMessage()));
         }
     }
 
-    /**
-     * ✏️ Modificar una cita existente (reprogramar)
-     * PUT /api/citas/modificar/{idCita}
-     */
+    // =========================================================
+    // 4️⃣ MODIFICAR CITA (REPROGRAMAR)
+    // =========================================================
     @PutMapping("/modificar/{idCita}")
-    public ResponseEntity<Map<String, Object>> modificarCita(
+    public ResponseEntity<?> modificarCita(
+            @PathVariable Long idCita,
+            @RequestBody Map<String, Object> datos) {
+
+        try {
+            LocalDate nuevaFecha = LocalDate.parse(datos.get("fecha").toString());
+            LocalTime nuevaHora = LocalTime.parse(datos.get("hora").toString());
+
+            Map<String, Object> response = citaService.modificarCita(idCita, nuevaFecha, nuevaHora);
+
+            boolean success = (boolean) response.get("success");
+
+            return success
+                    ? ResponseEntity.ok(response)
+                    : ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(
+                    Map.of("success", false, "message", "Error al modificar la cita: " + e.getMessage()));
+        }
+    }
+
+    // =========================================================
+    // 5️⃣ CANCELAR CITA
+    // =========================================================
+    @DeleteMapping("/cancelar/{idCita}")
+    public ResponseEntity<?> cancelarCita(@PathVariable Long idCita) {
+        try {
+            Map<String, Object> response = citaService.cancelarCita(idCita);
+
+            boolean success = (boolean) response.get("success");
+
+            return success
+                    ? ResponseEntity.ok(response)
+                    : ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("success", false, "message", "Error al cancelar la cita: " + e.getMessage()));
+        }
+    }
+
+    // =========================================================
+    // 6️⃣ CITAS DEL PACIENTE
+    // =========================================================
+    @GetMapping("/paciente/{idPaciente}")
+    public ResponseEntity<?> obtenerCitasPaciente(@PathVariable Long idPaciente) {
+        try {
+            List<Map<String, Object>> resultado = citaService.obtenerCitasPaciente(idPaciente);
+            return ResponseEntity.ok(resultado);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("success", false, "message", "Error al obtener citas del paciente"));
+        }
+    }
+
+
+
+    // =========================================================
+    // 7️⃣ CITAS FUTURAS DEL MÉDICO
+    // =========================================================
+    @GetMapping("/medico/{idMedico}/todas")
+    public ResponseEntity<?> obtenerTodasCitasMedico(@PathVariable Long idMedico) {
+        try {
+            return ResponseEntity.ok(citaService.obtenerTodasCitasMedico(idMedico));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("success", false, "message", "Error al obtener citas del médico"));
+        }
+    }
+
+    @GetMapping("/{idCita}")
+    public ResponseEntity<?> obtenerDetalleCita(@PathVariable Long idCita) {
+        try {
+            return ResponseEntity.ok(citaService.obtenerDetalleCita(idCita));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(Map.of("success", false, "message", "Cita no encontrada"));
+        }
+    }
+
+    @PutMapping("/{idCita}/finalizar")
+    public ResponseEntity<?> finalizarCita(
             @PathVariable Long idCita,
             @RequestBody Map<String, String> datos) {
 
         try {
-            LocalDate nuevaFecha = LocalDate.parse(datos.get("fecha"));
-            LocalTime nuevaHora = LocalTime.parse(datos.get("hora"));
+            String observaciones = datos.get("observaciones");
+            Map<String, Object> response = citaService.finalizarCita(idCita, observaciones);
 
-            Map<String, Object> response = citaService.modificarCita(idCita, nuevaFecha, nuevaHora);
+            boolean success = (boolean) response.get("success");
 
-            if ((Boolean) response.get("success")) {
-                return ResponseEntity.ok(response);
-            } else {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
-            }
+            return success
+                    ? ResponseEntity.ok(response)
+                    : ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
 
         } catch (Exception e) {
-            Map<String, Object> errorResponse = new HashMap<>();
-            errorResponse.put("success", false);
-            errorResponse.put("message", "Error al modificar la cita: " + e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("success", false, "message", "Error al finalizar la cita: " + e.getMessage()));
         }
     }
-
-    /**
-     * ❌ Cancelar una cita
-     * DELETE /api/citas/cancelar/{idCita}
-     */
-    @DeleteMapping("/cancelar/{idCita}")
-    public ResponseEntity<Map<String, Object>> cancelarCita(@PathVariable Long idCita) {
-        try {
-            Map<String, Object> response = citaService.cancelarCita(idCita);
-
-            if ((Boolean) response.get("success")) {
-                return ResponseEntity.ok(response);
-            } else {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
-            }
-
-        } catch (Exception e) {
-            Map<String, Object> errorResponse = new HashMap<>();
-            errorResponse.put("success", false);
-            errorResponse.put("message", "Error al cancelar la cita: " + e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
-        }
-    }
-
-    /**
-     * 👤 Obtener todas las citas de un paciente
-     * GET /api/citas/paciente/{idPaciente}
-     */
-    @GetMapping("/paciente/{idPaciente}")
-    public ResponseEntity<List<Cita>> obtenerCitasPaciente(@PathVariable Long idPaciente) {
-        try {
-            List<Cita> citas = citaService.obtenerCitasPaciente(idPaciente);
-            return ResponseEntity.ok(citas);
-        } catch (Exception e) {
-            System.err.println("❌ Error al obtener citas del paciente: " + e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
-    }
-
-    /**
-     * 👨‍⚕️ Obtener todas las citas futuras de un médico
-     * GET /api/citas/medico/{idMedico}
-     */
-    @GetMapping("/medico/{idMedico}")
-    public ResponseEntity<List<Cita>> obtenerCitasMedico(@PathVariable Long idMedico) {
-        try {
-            List<Cita> citas = citaService.obtenerCitasMedico(idMedico);
-            return ResponseEntity.ok(citas);
-        } catch (Exception e) {
-            System.err.println("❌ Error al obtener citas del médico: " + e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
-    }
-
-
 }

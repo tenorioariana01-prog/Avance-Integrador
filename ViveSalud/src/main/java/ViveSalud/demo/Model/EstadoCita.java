@@ -11,6 +11,8 @@ public class EstadoCita {
     @GeneratedValue (strategy = GenerationType.IDENTITY)
     @Column(name = "id_estado")
     private Long idEstado;
+
+    @Column(name = "nombre_estado")
     private String nombreEstado;
 
     public EstadoCita() {

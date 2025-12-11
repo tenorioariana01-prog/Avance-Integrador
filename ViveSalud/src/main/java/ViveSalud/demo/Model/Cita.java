@@ -11,47 +11,92 @@ import java.time.LocalTime;
 public class Cita {
 
     @Id
-    @GeneratedValue (strategy = GenerationType.IDENTITY)
-    private Long idCita;
-    private LocalDate fecha;
-    private LocalTime hora;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
+    // Relación con el paciente que agenda la cita
     @ManyToOne
-    @JoinColumn(name = "id_estado")
-    private EstadoCita estado;
-
-    @ManyToOne
-    @JoinColumn(name = "id_paciente")
+    @JoinColumn(name = "id_paciente", nullable = false)
     private Usuario paciente;
 
+    // Relación con el médico seleccionado
     @ManyToOne
-    @JoinColumn(name = "id_rol")
-    private RolUsuario rol;
+    @JoinColumn(name = "id_medico", nullable = false)
+    private Usuario medico;
+
+    @Column(name = "observaciones", columnDefinition = "TEXT")
+    private String observaciones;
+
+    @Column(name = "motivo")
+    private String motivo;
+
+
+
+    @Column(nullable = false)
+    private LocalDate fecha; // puede ser LocalDate
+
+    @Column(nullable = false)
+    private  LocalTime hora; // puede ser LocalTime
 
     @ManyToOne
-    @JoinColumn(name = "id_medico")
-    private Usuario medico;
+    @JoinColumn(name = "id_estado", nullable = false)
+    private EstadoCita estado;
 
     public Cita() {
     }
 
-    public Cita(Long idCita, LocalDate fecha, LocalTime hora, Usuario paciente, EstadoCita estado, RolUsuario rol, Usuario medico) {
-        this.idCita = idCita;
+    public Cita(Long id, Usuario paciente, Usuario medico,  LocalDate fecha, LocalTime hora, EstadoCita estado) {
+        this.id = id;
+        this.paciente = paciente;
+        this.medico = medico;
         this.fecha = fecha;
         this.hora = hora;
-        this.paciente = paciente;
         this.estado = estado;
-        this.rol = rol;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Usuario getPaciente() {
+        return paciente;
+    }
+
+    public void setPaciente(Usuario paciente) {
+        this.paciente = paciente;
+    }
+
+    public Usuario getMedico() {
+        return medico;
+    }
+
+    public void setMedico(Usuario medico) {
         this.medico = medico;
     }
 
-    public Long getIdCita() {
-        return idCita;
+    public String getObservaciones() {
+        return observaciones;
     }
 
-    public void setIdCita(Long idCita) {
-        this.idCita = idCita;
+    public void setObservaciones(String observaciones) {
+        this.observaciones = observaciones;
     }
+
+    public String getMotivo() {
+        return motivo;
+    }
+
+    public void setMotivo(String motivo) {
+        this.motivo = motivo;
+    }
+
+
+
+
 
     public LocalDate getFecha() {
         return fecha;
@@ -76,28 +121,11 @@ public class Cita {
     public void setEstado(EstadoCita estado) {
         this.estado = estado;
     }
-
-    public Usuario getPaciente() {
-        return paciente;
-    }
-
-    public void setPaciente(Usuario paciente) {
-        this.paciente = paciente;
-    }
-
-    public RolUsuario getRol() {
-        return rol;
-    }
-
-    public void setRol(RolUsuario rol) {
-        this.rol = rol;
-    }
-
-    public Usuario getMedico() {
-        return medico;
-    }
-
-    public void setMedico(Usuario medico) {
-        this.medico = medico;
-    }
 }
+
+
+
+
+
+
+

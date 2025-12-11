@@ -82,15 +82,10 @@ public class UsuarioService {
         }
     }
 
-    public Usuario iniciarSesion(String nombres, String contrasena) {
-        if (nombres == null || contrasena == null) return null;
-
-        // Busca el usuario en la base de datos
-        Optional<Usuario> usuarioOpt = usuarioRepository.findByNombresAndContrasena(nombres, contrasena);
-
-        // Devuelve el usuario si existe, sino null
-        return usuarioOpt.orElse(null);
+    public Usuario iniciarSesionPorCorreo(String correo, String contrasena) {
+        return usuarioRepository.findByCorreoAndContrasena(correo, contrasena).orElse(null);
     }
+
 
     public Usuario actualizarUsuario(Long idUsuario, Usuario datosActualizados) {
         try {
@@ -126,6 +121,15 @@ public class UsuarioService {
             System.err.println("❌ Error al actualizar usuario: " + e.getMessage());
             return null;
         }
+    }
+
+    // ✔ Obtener usuario por ID
+    public Usuario obtenerUsuarioPorId(Long id) {
+        return usuarioRepository.findById(id).orElse(null);
+    }
+
+    public Usuario guardarUsuario(Usuario usuario) {
+        return usuarioRepository.save(usuario);
     }
 
 }
