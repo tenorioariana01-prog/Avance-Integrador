@@ -1,0 +1,274 @@
+/* ===== ENCABEZADO ===== */
+.intro-calendario {
+  background: linear-gradient(180deg, #f1f6f7 0%, #ffffff 100%);
+  text-align: center;
+  padding: 4rem 2rem 3rem;
+}
+
+.intro-calendario h1 {
+  font-size: 2.5rem;
+  color: #00897b;
+  margin-bottom: 1rem;
+}
+
+.intro-calendario p {
+  color: #444;
+  font-size: 1.1rem;
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+/* ===== CALENDARIO ===== */
+.calendario-section {
+  display: flex;
+  justify-content: center;
+  padding: 3rem 2rem;
+  background: #f7f9fa;
+}
+
+.calendar-container {
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  width: 100%;
+  max-width: 700px;
+  text-align: center;
+}
+
+.calendar-container header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #00bfa5;
+  color: #fff;
+  padding: 1rem 1.5rem;
+}
+
+.calendar-container header h2 {
+  margin: 0;
+  font-size: 1.4rem;
+  font-weight: 600;
+}
+
+.calendar-container header button {
+  background: transparent;
+  border: none;
+  color: #fff;
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+
+/* ===== DÍAS ===== */
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 0.2rem;
+  padding: 1rem;
+}
+
+.calendar-grid div {
+  padding: 0.8rem 0;
+  border-radius: 8px;
+  font-weight: 500;
+  color: #333;
+}
+
+.calendar-grid .day-name {
+  font-weight: 700;
+  color: #00897b;
+}
+
+.calendar-grid .day {
+  background: #f9f9f9;
+  transition: background 0.3s ease;
+}
+
+.calendar-grid .day:hover {
+  background: #e0f2f1;
+  cursor: pointer;
+}
+
+/* Día con evento */
+.day.event {
+  background: #00bfa5;
+  color: #fff;
+  font-weight: 700;
+}
+
+/* ===== TARJETAS DE VACUNAS ===== */
+.vacunas-info {
+  text-align: center;
+  padding: 3rem 2rem;
+}
+
+.vacunas-info h2 {
+  color: #00897b;
+  font-size: 2rem;
+  margin-bottom: 2rem;
+}
+
+.vacuna-cards {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+
+.vacuna-card {
+  background: #fff;
+  padding: 1.5rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  max-width: 280px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.vacuna-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+}
+
+.vacuna-card h3 {
+  color: #00695c;
+  margin-bottom: 0.5rem;
+}
+
+.vacuna-card p {
+  color: #555;
+  font-size: 0.95rem;
+}
+
+/* ===== BOTÓN DE RETROCESO ===== */
+.back-button {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  background: rgba(0, 137, 123, 0.9);
+  color: #fff;
+  border-radius: 50%;
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.4rem;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  transition: background 0.3s ease, transform 0.2s ease;
+  z-index: 999;
+}
+
+.back-button:hover {
+  background: #00bfa5;
+  transform: scale(1.05);
+}
+/* ===== CALENDARIO DE VACUNACIÓN ===== */
+.calendario-section {
+  padding: 4rem 2rem;
+  background: #f1f6f7;
+  text-align: center;
+}
+
+.calendario-section h2 {
+  font-size: 2.2rem;
+  color: #00897b;
+  margin-bottom: 2rem;
+  position: relative;
+}
+
+.calendario-section h2::after {
+  content: "";
+  position: absolute;
+  width: 80px;
+  height: 4px;
+  background: #00bfa5;
+  bottom: -12px;
+  left: 50%;
+  transform: translateX(-50%);
+  border-radius: 4px;
+}
+
+/* Calendario */
+.calendar {
+  max-width: 600px;
+  margin: 0 auto;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  overflow: hidden;
+}
+
+.calendar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #00bfa5;
+  color: #fff;
+  padding: 1rem;
+}
+
+.calendar-body {
+  padding: 1rem;
+}
+
+.day-names {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+
+.days {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 6px;
+}
+
+.day {
+  padding: 0.8rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.day:hover {
+  background: #e0f2f1;
+}
+
+.event-day {
+  background: #c8e6c9;
+  font-weight: 700;
+  border: 2px solid #388e3c;
+}
+
+/* Modal */
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 1000;
+  left: 0; top: 0;
+  width: 100%; height: 100%;
+  background: rgba(0,0,0,0.4);
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-content {
+  background: #fff;
+  padding: 2rem;
+  border-radius: 12px;
+  width: 90%;
+  max-width: 400px;
+  text-align: left;
+  position: relative;
+}
+
+#close-modal {
+  position: absolute;
+  right: 15px;
+  top: 10px;
+  cursor: pointer;
+  font-size: 1.4rem;
+  color: #333;
+}

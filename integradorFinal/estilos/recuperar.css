@@ -1,0 +1,226 @@
+/* === ESTILOS GENERALES === */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Poppins", sans-serif;
+}
+
+body {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #fff;
+}
+
+/* === CONTENEDOR PRINCIPAL === */
+.container {
+  display: flex;
+  width: 900px;
+  height: 480px;
+  border-radius: 20px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  background: #fff;
+  position: relative;
+}
+
+/* === SECCIÓN DE FORMULARIO === */
+.form-section {
+  flex: 1.2;
+  padding: 60px 70px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.logo img {
+  width: 35px;
+}
+
+.logo span {
+  font-weight: 600;
+  color: #0e9c88;
+}
+
+h2 {
+  margin-top: 20px;
+  font-size: 28px;
+  font-weight: 700;
+  color: #333;
+}
+
+/* === DESCRIPCIÓN (solo para recuperar.html) === */
+.descripcion {
+  font-size: 0.95rem;
+  color: #666;
+  margin-top: 10px;
+  margin-bottom: 30px;
+  line-height: 1.5;
+  text-align: center;
+}
+
+/* === FORMULARIO === */
+form {
+  margin-top: 10px;
+}
+
+.form-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+}
+
+.input-group {
+  position: relative;
+}
+
+/* 🔵 CASILLAS OVALADAS */
+.input-group input {
+  width: 100%;
+  padding: 14px 20px;
+  border: 1.5px solid #ccc;
+  border-radius: 9999px !important;
+  outline: none;
+  font-size: 15px;
+  background-color: #fff;
+  transition: 0.3s ease;
+}
+
+.input-group input:focus {
+  border-color: #0e9c88;
+  box-shadow: 0 0 0 3px rgba(14, 156, 136, 0.15);
+}
+
+/* LABEL flotante */
+.input-group label {
+  position: absolute;
+  top: 13px;
+  left: 20px;
+  color: #a3a3a3;
+  pointer-events: none;
+  background: #fff;
+  padding: 0 6px;
+  transition: 0.2s;
+  z-index: 1;
+}
+
+.input-group input:focus + label,
+.input-group input:valid + label {
+  top: -9px;
+  left: 18px;
+  color: #0e9c88;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+/* === BOTÓN OVALADO === */
+.btn-container {
+  text-align: center;
+  margin-top: 10px;
+}
+
+.btn {
+  background: #0e9c88;
+  color: white;
+  border: none;
+  border-radius: 9999px !important;
+  padding: 14px 0;
+  font-size: 16px;
+  cursor: pointer;
+  transition: 0.3s;
+  width: 70%;
+}
+
+.btn:hover {
+  background: #0b7c6c;
+}
+
+/* === ENLACE PARA VOLVER AL LOGIN === */
+.forgot-password {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.forgot-password a {
+  font-size: 0.9rem;
+  color: #0e9c88;
+  text-decoration: none;
+  transition: color 0.3s ease;
+  font-weight: 500;
+}
+
+.forgot-password a:hover {
+  color: #0b7c6c;
+  text-decoration: underline;
+}
+
+/* === IMAGEN LATERAL === */
+.image-section {
+  flex: 1;
+  background-color: #d8f5ee;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-top-left-radius: 200px;
+  border-top-right-radius: 200px;
+  overflow: hidden;
+}
+
+.image-section img {
+  width: 80%;
+  max-width: 300px;
+}
+
+/* === BOTÓN VOLVER AL INICIO === */
+.back-button {
+  position: absolute;
+  top: 25px;
+  left: 25px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+  color: #0e9c88;
+  font-weight: 600;
+  font-size: 15px;
+  transition: 0.3s;
+  z-index: 10;
+}
+
+.back-button i {
+  font-size: 26px;
+  transition: 0.3s ease;
+}
+
+.back-button:hover {
+  color: #0b7c6c;
+  transform: translateX(-2px);
+}
+
+/* === Responsive === */
+@media (max-width: 992px) {
+  .container {
+    width: 90%;
+    flex-direction: column;
+    height: auto;
+  }
+
+  .form-section {
+    padding: 40px;
+  }
+
+  .btn {
+    width: 100%;
+  }
+
+  .image-section {
+    display: none;
+  }
+}
